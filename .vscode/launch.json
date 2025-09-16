@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "name": "Console App",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/AiKnowledgeAssistant.ConsoleApp/bin/Debug/net9.0/AiKnowledgeAssistant.ConsoleApp.dll"
+        }
+    ]
+}
