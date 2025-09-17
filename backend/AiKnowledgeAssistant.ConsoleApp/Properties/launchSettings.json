@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AiKnowledgeAssistant.ConsoleApp": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

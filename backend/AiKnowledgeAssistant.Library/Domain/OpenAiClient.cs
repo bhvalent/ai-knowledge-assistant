@@ -1,21 +1,17 @@
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
-namespace AiKnowledgeAssistant.Library;
+namespace AiKnowledgeAssistant.Library.Domain;
 
 public class OpenAiClient : IOpenAiClient
 {
     private const string EMBED_MODEL = "text-embedding-3-small";
     private readonly HttpClient _httpClient;
 
-    public OpenAiClient(HttpClient httpClient, string apiKey)
+    public OpenAiClient(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri("https://api.openai.com/");
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
     }
 
     public async Task<float[]> CreateEmbeddingAsync(string input)
