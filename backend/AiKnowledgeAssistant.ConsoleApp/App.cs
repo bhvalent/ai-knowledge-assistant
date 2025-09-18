@@ -17,26 +17,46 @@ public class App
     
     public async Task Run()
     {
-        // var documents = new List<string>
-        // {
-        //     "The quick brown fox jumps over the lazy dog.",
-        //     "C# is a modern, object-oriented programming language.",
-        //     "SQL Server is a relational database management system by Microsoft.",
-        //     "Angular is a TypeScript-based front-end framework."
-        // };
+        Console.WriteLine("Vector DB Console App");
+        Console.WriteLine("Commands: save, search, exit");
 
-        // foreach (var doc in documents)
-        // {
-        //     var vector = await _client.CreateEmbeddingAsync(doc);
-        //     await _documentRepository.SaveAsync(new DocumentDto(doc, vector));
-        // }
+        while (true)
+        {
+            Console.Write("> ");
+            var input = Console.ReadLine()?.Trim().ToLower();
 
-        Console.WriteLine("Enter a search Query: ");
-        var query = Console.ReadLine() ?? "";
-        var queryVector = await _client.CreateEmbeddingAsync(query);
+            if (input == "exit")
+                break;
 
-        var bestMatch = await _documentRepository.FindClosestAsync(queryVector);
+            if (input == "save")
+            {
+                Console.Write("Enter phrase to save: ");
+                var phrase = Console.ReadLine();
 
-        Console.WriteLine($"\nBest match: {bestMatch?.Content} (id: {bestMatch?.Id})");
+                if (!string.IsNullOrEmpty(phrase))
+                {
+                    var vector = await _client.CreateEmbeddingAsync(phrase);
+                    await _documentRepository.SaveAsync(new DocumentDto(phrase, vector));
+                    Console.WriteLine("Saved to DB Successfully");
+                }
+            }
+            else if (input == "search")
+            {
+                Console.Write("Enter phrase to search: ");
+                var query = Console.ReadLine() ?? "";
+                var queryVector = await _client.CreateEmbeddingAsync(query);
+
+                var result = await _documentRepository.FindClosestAsync(queryVector);
+
+                if (result is not null)
+                    Console.WriteLine($"Best match: {result?.Content}");
+                else
+                    Console.WriteLine("No results found.");
+            }
+            else
+            {
+                Console.WriteLine("Unknown command. Use save, search, or exit.");
+            }
+        }
     }
 }

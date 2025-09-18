@@ -23,7 +23,7 @@ public class Program
             {
                 // Register dependencies
                 var openAiConfig = context.Configuration.GetSection("OpenAi");
-                string baseUrl = context.Configuration.GetValue<string>("OpenAi:Url") ?? "";
+                string baseUrl = openAiConfig["Url"] ?? "";
                 string apiKey = openAiConfig["Key"] ?? "";
 
                 services.AddHttpClient<IOpenAiClient, OpenAiClient>(client =>
