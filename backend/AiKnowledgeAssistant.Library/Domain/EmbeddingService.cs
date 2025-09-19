@@ -14,7 +14,7 @@ public class EmbeddingService : IEmbed
 
     public async Task<float[]> GetEmbeddingAsync(string input)
     {
-        var request = new EmbedRequestBody(input, EMBED_MODEL);
+        var request = new EmbedRequest(input, EMBED_MODEL);
         var response = await _client.CreateEmbeddingAsync(request);
 
         return response?.Data?.FirstOrDefault()?.Embedding ?? [];

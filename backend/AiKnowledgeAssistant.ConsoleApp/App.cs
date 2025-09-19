@@ -17,7 +17,7 @@ public class App
 
         while (true)
         {
-            Console.WriteLine("Commands: save, search, exit");
+            Console.WriteLine("Commands: save, search, ask, exit");
             Console.Write("> ");
             var input = Console.ReadLine()?.Trim().ToLower();
 
@@ -48,6 +48,14 @@ public class App
                     Console.WriteLine($"Found chunk: {result.Content} (metadata: {result.Metadata})");
                 else
                     Console.WriteLine("No results found.");
+            }
+            else if (input == "ask")
+            {
+                Console.Write("Enter your question: ");
+                var question = Console.ReadLine() ?? string.Empty;
+
+                var answer = await _documentService.AskAsync(question);
+                Console.WriteLine($"Answer: {answer}");
             }
             else
             {

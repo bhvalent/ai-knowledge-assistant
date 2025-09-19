@@ -40,6 +40,7 @@ public class Program
                 services.AddTransient<IEmbed, EmbeddingService>();
                 services.AddTransient<IChunk, ChunkingService>();
                 services.AddTransient<IDocumentService, DocumentService>();
+                services.AddTransient<ILLMService, LLMService>();
 
                 services.AddTransient<App>();
             })
