@@ -2,4 +2,4 @@ using Pgvector;
 
 namespace AiKnowledgeAssistant.Library.DAL;
 
-public record DocumentEntity(int Id, string Content, Vector Embedding);
+public record DocumentEntity(int Id, string Content, Vector Embedding, string Metadata);

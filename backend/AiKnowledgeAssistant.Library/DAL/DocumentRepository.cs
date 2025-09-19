@@ -1,4 +1,5 @@
 using AiKnowledgeAssistant.Library.Domain;
+using AiKnowledgeAssistant.Library.Domain.Dtos;
 using Dapper;
 using Pgvector;
 
@@ -13,7 +14,7 @@ public class DocumentRepository : IDocumentRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task SaveAsync(DocumentDto document)
+    public async Task SaveChunkAsync(DocumentDto document)
     {
         var entity = DocumentMapper.ToPersistance(document);
 
@@ -21,8 +22,8 @@ public class DocumentRepository : IDocumentRepository
         await conn.ExecuteAsync(
             """
             INSERT INTO documents
-                (content, embedding)
-                VALUES(@Content, @Embedding);
+                (content, embedding, metadata)
+                VALUES(@Content, @Embedding, @Metadata);
             """,
             entity
         );
@@ -35,7 +36,7 @@ public class DocumentRepository : IDocumentRepository
         var result = await conn.QueryFirstOrDefaultAsync<DocumentEntity>(
             """
                 SELECT
-                    id, content, embedding
+                    id, content, embedding, metadata
                 FROM documents
                 ORDER BY embedding <-> @queryEmbedding
                 LIMIT 1;
@@ -49,6 +50,6 @@ public class DocumentRepository : IDocumentRepository
 
 public interface IDocumentRepository
 {
-    Task SaveAsync(DocumentDto document);
-    Task<DocumentDto?> FindClosestAsync(float[] query);
+    Task SaveChunkAsync(DocumentDto document);
+    Task<DocumentDto?> FindClosestAsync(float[] queryEmbedding);
 }

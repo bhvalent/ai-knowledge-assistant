@@ -1,27 +1,23 @@
-using AiKnowledgeAssistant.Library.DAL;
 using AiKnowledgeAssistant.Library.Domain;
-using Pgvector;
 
 namespace AiKnowledgeAssistant.ConsoleApp;
 
 public class App
 {
-    private readonly IOpenAiClient _client;
-    private readonly IDocumentRepository _documentRepository;
+    private readonly IDocumentService _documentService;
 
-    public App(IOpenAiClient openAiClient, IDocumentRepository documentRepository)
+    public App(IDocumentService documentService)
     {
-        _client = openAiClient;
-        _documentRepository = documentRepository;
+        _documentService = documentService;
     }
     
     public async Task Run()
     {
         Console.WriteLine("Vector DB Console App");
-        Console.WriteLine("Commands: save, search, exit");
 
         while (true)
         {
+            Console.WriteLine("Commands: save, search, exit");
             Console.Write("> ");
             var input = Console.ReadLine()?.Trim().ToLower();
 
@@ -30,13 +26,15 @@ public class App
 
             if (input == "save")
             {
-                Console.Write("Enter phrase to save: ");
-                var phrase = Console.ReadLine();
+                Console.Write("Enter document name: ");
+                var docName = Console.ReadLine() ?? "doc";
 
-                if (!string.IsNullOrEmpty(phrase))
+                Console.Write("Enter content: ");
+                var content = Console.ReadLine() ?? string.Empty;
+
+                if (!string.IsNullOrEmpty(content))
                 {
-                    var vector = await _client.CreateEmbeddingAsync(phrase);
-                    await _documentRepository.SaveAsync(new DocumentDto(phrase, vector));
+                    await _documentService.SaveDocumentAsync(content, docName);
                     Console.WriteLine("Saved to DB Successfully");
                 }
             }
@@ -44,12 +42,10 @@ public class App
             {
                 Console.Write("Enter phrase to search: ");
                 var query = Console.ReadLine() ?? "";
-                var queryVector = await _client.CreateEmbeddingAsync(query);
-
-                var result = await _documentRepository.FindClosestAsync(queryVector);
+                var result = await _documentService.SearchAsync(query);
 
                 if (result is not null)
-                    Console.WriteLine($"Best match: {result?.Content}");
+                    Console.WriteLine($"Found chunk: {result.Content} (metadata: {result.Metadata})");
                 else
                     Console.WriteLine("No results found.");
             }

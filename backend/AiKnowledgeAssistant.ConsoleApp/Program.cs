@@ -37,6 +37,10 @@ public class Program
                 services.AddSingleton<IDbConnectionFactory>(x => new AiDbConnectionFactory(connectionString));
 
                 services.AddTransient<IDocumentRepository, DocumentRepository>();
+                services.AddTransient<IEmbed, EmbeddingService>();
+                services.AddTransient<IChunk, ChunkingService>();
+                services.AddTransient<IDocumentService, DocumentService>();
+
                 services.AddTransient<App>();
             })
             .Build();

@@ -5,3 +5,5 @@ CREATE TABLE documents (
     content TEXT,
     embedding vector(1536) -- size depends on the embedding model
 );
+
+ALTER TABLE documents ADD COLUMN metadata TEXT;
